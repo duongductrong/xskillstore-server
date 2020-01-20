@@ -184,32 +184,33 @@ module.exports.checkCreate = async (req, res, next) => {
     if(Checking.isNull(thumbnails) || thumbnails.length <= 0) {
         errors.thumbnails = Notification.message("Ảnh Thumbnail sản phẩm không được để trống", "error", 400);
     }
-    // else {
-    //     if(Array.isArray(thumbnails)) {
-    //         if(thumbnails.length > 2) {
-    //             errors.thumbnails = Notification.message("Số lượng ảnh thumbnail chỉ cần 1 hoặc 2 ảnh", "error", 400);
-    //         }
-    //         else {
-    //             thumbnails.forEach(thumbnail => {
-    //                 if(!Checking.isImage(thumbnail)) {
-    //                     errors.thumbnails = Notification.message("Thumbnails có tồn tại file không thuộc file hình ảnh", "error", 400);
-    //                 }
-    //             });
-    //         }
-    //     }
-    //     else {
-    //         errors.thumbnails = Notification.message("Client xử lý lỗi, thumbnails gửi lên phải là một Array", "error", 400);
-    //     }
-    // }
+    else {
+        if(Array.isArray(thumbnails)) {
+            if(thumbnails.length > 2) {
+                errors.thumbnails = Notification.message("Số lượng ảnh thumbnail chỉ cần 1 hoặc 2 ảnh", "error", 400);
+            }
+            else {
+                thumbnails.forEach(thumbnail => {
+                    if(!Checking.isImage(thumbnail)) {
+                        errors.thumbnails = Notification.message("Thumbnails có tồn tại file không thuộc file hình ảnh", "error", 400);
+                    }
+                });
+            }
+        }
+        else {
+            errors.thumbnails = Notification.message("Client xử lý lỗi, thumbnails gửi lên phải là một Array", "error", 400);
+        }
+    }
+
     //Check images detail
     if(Checking.isNull(images_detail) || images_detail.length <= 0) {
         errors.images_detail = Notification.message("Ảnh chi tiết của sản phẩm không được để trống", "error", 404);
     }
-    // else {
-    //     if(!Checking.isImages(images_detail)) {
-    //         errors.images_detail = Notification.message("Tồn tại FILE ảnh chi tiết sản phẩm không thuộc đuôi ảnh .PNG, .JPG, .GIF", "error", 400);
-    //     }
-    // }
+    else {
+        if(!Checking.isImages(images_detail)) {
+            errors.images_detail = Notification.message("Tồn tại FILE ảnh chi tiết sản phẩm không thuộc đuôi ảnh .PNG, .JPG, .GIF", "error", 400);
+        }
+    }
     //Check price
     if(Checking.isNull(price)) {
         errors.price = Notification.message("Giá tiền sản phẩm không được để trống", "error", 404);
@@ -375,23 +376,23 @@ module.exports.checkPut = async (req, res, next) => {
     if(Checking.isNull(thumbnails) || thumbnails.length <= 0) {
         errors.thumbnails = Notification.message("Ảnh Thumbnail sản phẩm không được để trống", "error", 400);
     }
-    // else {
-    //     if(Array.isArray(thumbnails)) {
-    //         if(thumbnails.length > 2) {
-    //             errors.thumbnails = Notification.message("Số lượng ảnh thumbnail chỉ cần 1 hoặc 2 ảnh", "error", 400);
-    //         }
-    //         else {
-    //             thumbnails.forEach(thumbnail => {
-    //                 if(!Checking.isImage(thumbnail)) {
-    //                     errors.thumbnails = Notification.message("Thumbnails có tồn tại file không thuộc file hình ảnh", "error", 400);
-    //                 }
-    //             });
-    //         }
-    //     }
-    //     else {
-    //         errors.thumbnails = Notification.message("Client xử lý lỗi, thumbnails gửi lên phải là một Array", "error", 400);
-    //     }
-    // }
+    else {
+        if(Array.isArray(thumbnails)) {
+            if(thumbnails.length > 2) {
+                errors.thumbnails = Notification.message("Số lượng ảnh thumbnail chỉ cần 1 hoặc 2 ảnh", "error", 400);
+            }
+            else {
+                thumbnails.forEach(thumbnail => {
+                    if(!Checking.isImage(thumbnail)) {
+                        errors.thumbnails = Notification.message("Thumbnails có tồn tại file không thuộc file hình ảnh", "error", 400);
+                    }
+                });
+            }
+        }
+        else {
+            errors.thumbnails = Notification.message("Client xử lý lỗi, thumbnails gửi lên phải là một Array", "error", 400);
+        }
+    }
 
     //@Check images detail
     //@Temp remove else if conditions validate image detail
@@ -399,11 +400,11 @@ module.exports.checkPut = async (req, res, next) => {
     if(Checking.isNull(images_detail) || images_detail.length <= 0) {
         errors.images_detail = Notification.message("Ảnh chi tiết của sản phẩm không được để trống", "error", 404);
     }
-    // else {
-    //     if(!Checking.isImages(images_detail)) {
-    //         errors.images_detail = Notification.message("Tồn tại FILE ảnh chi tiết sản phẩm không thuộc đuôi ảnh .PNG, .JPG, .GIF", "error", 400);
-    //     }
-    // }
+    else {
+        if(!Checking.isImages(images_detail)) {
+            errors.images_detail = Notification.message("Tồn tại FILE ảnh chi tiết sản phẩm không thuộc đuôi ảnh .PNG, .JPG, .GIF", "error", 400);
+        }
+    }
     
     //Check price
     if(Checking.isNull(price)) {
