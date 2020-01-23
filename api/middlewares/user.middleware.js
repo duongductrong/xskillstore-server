@@ -32,13 +32,13 @@ module.exports.checkGetUser = async (req, res, next) => {
     //Find user with ID
     try {
         let USER = await USER_MODEL.findById({_id: id});
-
         if(!USER) {
             res.json(Notification.message("Người dùng này không tồn tại", "error", 404));
             return;
         }
 
         res.locals.user = {
+            _id: USER._id,
             username: USER.username,
             address: USER.address,
             firstname: USER.firstname,
@@ -209,16 +209,31 @@ module.exports.checkUpdate = async (req, res, next) => {
     }
 
     //Checking pass
-    if( userLogin.permission !== "admin" ) {
-        if(Checking.isNull(password)) {
-            errors.password = Notification.message("Mật khẩu không được để trống", "error", 404);
+    if( userLogin.permission !== "admin" && password !== undefined) {
+        let result;
+        let { confirm_password, old_password } = req.body;
+        //Checking password old
+        result = bcrypt.compareSync(old_password, USER.password );
+        //result = false
+        if(!result) {
+            errors.old_password = Notification.message("Mật khẩu hiện tại không đúng", "error", 400);
         }
         else {
-            if(!Checking.isPassword(password)) {
-                errors.password = Notification.message("Mật khẩu không hợp lệ, phải có đầy đủ ký tự hoa, thường, số", "error", 400)
+            //Result = true
+            //Continute checking new password
+            if(Checking.isNull(password)) {
+                errors.password = Notification.message("Mật khẩu không được để trống", "error", 404);
+            }
+            else if(confirm_password !== password) {
+                errors.password = Notification.message("Mật khẩu xác nhận và mật khẩu mới không giống nhau", "error", 400);
             }
             else {
-                hash = HashPass(10,password);
+                if(!Checking.isPassword(password)) {
+                    errors.password = Notification.message("Mật khẩu không hợp lệ, phải có đầy đủ ký tự hoa, thường, số", "error", 400)
+                }
+                else {
+                    hash = HashPass(10,password);
+                }
             }
         }
     }
@@ -264,6 +279,11 @@ module.exports.checkUpdate = async (req, res, next) => {
         }
     }
 
+    //Check address
+    if(Checking.isNull(address)) {
+        errors.address = Notification.message("Địa chỉ của bạn không được để trống", "error", 404);
+    }
+
     //Checking error exists
     if(Checking.testError(errors)) {
         res.json(Notification.message("Có lỗi xảy ra", "error", 400, { errors: errors }))
@@ -278,7 +298,8 @@ module.exports.checkUpdate = async (req, res, next) => {
             lastname: lastname,
             permission: permission
         }
-        req.body.password = await hash;
+        //get hash password
+        await hash ? req.body.password = await hash : req.body;
         userLogin.permission !== "admin" ? res.locals.user = req.body : res.locals.user = newProfile;
         res.locals.userId = USER._id;
         next();
