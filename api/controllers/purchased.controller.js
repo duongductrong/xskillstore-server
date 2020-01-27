@@ -11,6 +11,13 @@ module.exports.purchased = (req, res) => {
 
     res.json(Notification.message("Lấy dữ liệu đơn hàng thành công", "ok", 200, { purchased: purchased }));
 }
+
+module.exports.userOrders = (req, res) => {
+    const { user_orders, userLogin, page, onpage, total } = res.locals;
+    //Get user orders
+    res.json(Notification.message("Lấy đơn hàng của người dùng thành công", "ok", 200, { userOrders: user_orders, user: userLogin._id, onPage: onpage, page: page, total: total }))
+}
+
 module.exports.create = (req, res) => {
     const { purchased } = res.locals;
 

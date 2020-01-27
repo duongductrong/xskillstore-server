@@ -92,6 +92,27 @@ module.exports.checkGetParchased = async (req, res, next) => {
     }
 }
 
+module.exports.checkUserOrders = async (req, res, next) => {
+    const { page = 1, onpage = 10 } = req.query;
+    const { userLogin } = res.locals;
+    if(!Checking.isPageIsOnPage(page, onpage)) {
+        res.json(Notification.message("Tham số trang, và số lượng hiển thị trên trang phải là số", "error", 409));
+        return;
+    }
+    let pagination = Pagination(page, onpage);
+    let total = await PURCHASED_MODEL.find({user: {$in: userLogin._id}});
+    let user_orders = await PURCHASED_MODEL.find({user: {$in: userLogin._id}}).sort({_id: "DESC"});
+    user_orders = user_orders.slice(pagination.start, pagination.end);
+    res.locals = {
+        user_orders : user_orders,
+        page: page,
+        onpage: onpage,
+        userLogin: userLogin,
+        total: total.length
+    };
+    next();
+}
+
 module.exports.checkCreate = async (req, res, next) => {
     let { userLogin } = res.locals;
     let errors = {};
