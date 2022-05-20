@@ -3,7 +3,7 @@ module.exports.message = (msgVi, status, code,...arg) => {
     newError = {
         msgVi: msgVi,
         status: status,
-        code: code
+        code: code,
     }
     arg.map((item) => {
         if(typeof item === "object" && !Array.isArray(item)) {

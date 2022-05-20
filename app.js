@@ -12,7 +12,7 @@ const app = express();
 dotenv.config();
 
 //MongoDB
-mongoose.connect(process.env.DTB_PRIVATE, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.DTB_TEST, {useNewUrlParser: true, useUnifiedTopology: true});
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -55,7 +55,12 @@ app.use("/api/products", productRoute);
 app.use("/api/purchased", purchasedRoute);
 
 app.get("/api/logined", userMiddleware.checkAuth, (req, res) => {
-    res.json(Notification.message("Đã đăng nhập", "ok", 200));
+
+    const { userLogin } = res.locals;
+
+    res.json(Notification.message("Đã đăng nhập", "ok", 200, {
+        info: userLogin,
+    }));
 });
 
 app.use("/api/multer", MulterUploadRoute);
